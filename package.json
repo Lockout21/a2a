@@ -1,0 +1,68 @@
+{
+  "name": "@multi-agent/a2a",
+  "version": "0.2.3",
+  "description": "A2A Protocol Framework",
+  "keywords": [
+    "ai",
+    "agents",
+    "a2a",
+    "agent-to-agent",
+    "multi-agent"
+  ],
+  "author": "llong8",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/browser.js",
+      "node": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "generate-proto": "bun scripts/generate-proto-content.mjs",
+    "build": "bun run generate-proto && tsup",
+    "prepublishOnly": "bun run build",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@multi-agent/agent-kit": "workspace:*",
+    "@grpc/grpc-js": "^1.9.0",
+    "@grpc/proto-loader": "^0.7.10",
+    "@langchain/core": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.18.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@langchain/core": "^1.0.0",
+    "@types/node": "^20.0.0",
+    "zod": "^4.2.1",
+    "@types/ws": "^8.5.10",
+    "protobufjs": "^7.5.4",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/llong8/multi-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/llong8/multi-agent/issues"
+  },
+  "homepage": "https://github.com/llong8/multi-agent#readme"
+}

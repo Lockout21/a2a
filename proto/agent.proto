@@ -1,0 +1,163 @@
+syntax = "proto3";
+
+package agent.v7;
+
+// ============================================
+// A2A v7.2 - Agent Protocol (Unified Message Structure)
+//
+// 设计原则:
+// 1. 统一消息结构：所有消息都使用相同的 text + data 结构
+// 2. 固定行为 + 自由扩展：
+//    - call/cancel: 固定语义，框架理解并处理
+//    - business: 万能容器，承载所有自定义消息（框架透传 type）
+// 3. Business 的 type 完全开放：
+//    - 框架发送: 'error'
+//    - 应用发送: 'question', 'answer', 'todolist', 'progress', 'plan', ...
+//    - 框架不解析 type，由接收方自行处理
+// 4. 支持 gRPC Bidirectional Streaming
+//
+// v7.2 新特性:
+// - messageId/timestamp 由框架自动生成（用户无需手动提供）
+// - data 字段自动编解码（JSON ↔ bytes）
+// - 开发者只需提供 type + text + data（普通对象）
+// ============================================
+
+service Agent {
+  // 执行Agent方法（双向流，支持多轮交互）
+  rpc Execute(stream Message) returns (stream Message);
+
+  // 获取Agent卡片
+  rpc GetAgentCard(GetAgentCardRequest) returns (AgentCard);
+
+  // 健康检查
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+// ============================================
+// 核心消息结构
+// ============================================
+
+message Message {
+  // v7.2: 以下字段由框架自动生成，开发者无需手动提供
+  string messageId = 1;   // 消息唯一ID（框架自动生成 UUID）
+  int64 timestamp = 2;    // Unix 时间戳毫秒（框架自动生成 Date.now()）
+  string sessionId = 3;   // 会话ID（用于跟踪对话历史）
+  string traceId = 4;     // 链路追踪ID（跨Agent请求追踪），格式: tr_{timestamp}_{random}
+  AgentCard from = 5;     // 消息来源 Agent（协议层自动注入，用于 UI 显示发送者信息）
+
+  oneof content {
+    // 固定行为消息（框架层，固定2种）
+    Call call = 10;       // 调用方法
+    Cancel cancel = 11;   // 取消执行
+
+    // 自由扩展消息（应用层，完全开放）
+    Business business = 20;  // 万能容器，承载所有自定义 type
+  }
+}
+
+// ============================================
+// 固定行为消息（框架层，固定2种）
+// ============================================
+
+/**
+ * Call - 调用Agent技能
+ *
+ * 统一结构：
+ * - text: 人类可读描述（如 "Calling skill: execute"）
+ * - data: 包含 { skill, params } 的 JSON 序列化数据
+ */
+message Call {
+  string text = 1;   // 人类可读描述
+  bytes data = 2;    // { skill: string, params: any }
+}
+
+/**
+ * Cancel - 取消执行
+ *
+ * 统一结构：
+ * - text: 取消原因（人类可读）
+ * - data: 可选的结构化数据
+ */
+message Cancel {
+  string text = 1;   // 取消原因
+  bytes data = 2;    // 可选的结构化数据
+}
+
+// ============================================
+// 自由扩展消息（应用层，完全开放）
+// ============================================
+
+/**
+ * Business - 自由扩展消息的万能容器
+ *
+ * 设计理念：
+ * - Business 本身只是一个容器，不定义任何业务语义
+ * - 通过 type 字段区分不同的消息类型
+ * - 框架不解析 type，完全透传给接收方处理
+ *
+ * 常见 type（非强制，仅供参考）：
+ * - 'error':    框架发送的错误消息 { code, retryable, ... }
+ * - 'question': Agent 向用户提问 { questionId, options, ... }
+ * - 'answer':   用户回答 Agent 的问题 { questionId, value, ... }
+ * - 'todolist': Agent 生成的任务列表 { tasks: [...], ... }
+ * - 'progress': 执行进度更新 { percentage, message, ... }
+ * - 'plan':     执行计划 { steps, timeline, ... }
+ * - 任意自定义 type...
+ *
+ * 字段说明：
+ * - type: 消息类型标识符（字符串，完全自定义）
+ * - text: 人类可读内容（Markdown/纯文本），CLI 可直接展示
+ * - data: 结构化数据（JSON 序列化为 bytes），可选，供程序处理
+ */
+message Business {
+  string type = 1;  // 消息类型（完全自定义，如 'error', 'question', 'todolist', ...）
+  string text = 2;  // 人类可读内容（Markdown/纯文本）
+  bytes data = 3;   // 结构化数据（JSON 序列化），可选
+}
+
+// ============================================
+// Agent卡片
+// ============================================
+
+message GetAgentCardRequest {}
+
+message AgentCard {
+  string agentId = 1;
+  string name = 2;
+  string version = 3;
+  string description = 4;
+  repeated SkillInfo skills = 10;
+  string defaultSkill = 11;
+  Endpoint endpoint = 12;
+  string role = 13;  // Agent 角色: 'primary' | 'tool' | 'both'（默认 'both'）
+}
+
+message SkillInfo {
+  string name = 1;
+  string description = 2;
+  string inputSchema = 6;   // JSON Schema for input parameters (JSON string)
+  string outputSchema = 7;  // JSON Schema for output result (JSON string)
+}
+
+message Endpoint {
+  string host = 1;
+  int32 port = 2;
+  string namespace = 3;  // 命名空间，用于区分注册的 Agent（可选）
+  string address = 4;    // 预构建的 A2A 地址：a2a://host:port[/namespace]
+}
+
+// ============================================
+// 健康检查
+// ============================================
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  enum Status {
+    UNKNOWN = 0;
+    HEALTHY = 1;
+    UNHEALTHY = 2;
+  }
+  Status status = 1;
+  string message = 2;
+}
